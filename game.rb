@@ -434,11 +434,10 @@ end
 #ROOM leading to boulder and ladder
 def room6
   #state 1 = new
-  #state 2 = axe not taken
-  #state 3 = axe taken
+  #state 2 = visited
 
   if @room6 == 1
-    puts 'You are in a small round room with a passageways heading east and west.'
+    puts 'You are in a small round room with passageways heading east and west.'
     @room6 = 2
   end
 
@@ -453,7 +452,7 @@ def room6
     elsif cmd.include? 'inventory'
       list_inventory
     elsif cmd.include? 'look'
-      puts 'You are in a small round room with a passageways heading east and west.'
+      puts 'You are in a small round room with passageways heading east and west.'
     elsif cmd.include? 'use'
       puts 'You can\'t use that here'
     elsif cmd.include? 'west'
@@ -476,7 +475,9 @@ def room7
   #state 3 = axe taken
 
   if @room7 == 1
-    puts 'you are in room7'
+    puts 'You are standing on an open ledge, fairly high up from the ground beneath you. To the north, there is a ladder going down.'
+    puts 'You can clearly hear water running below you at the bottom of the ladder.'
+    puts 'There is a passageway to the east.'
     @room7 = 2
   end
 
@@ -491,13 +492,17 @@ def room7
     elsif cmd.include? 'inventory'
       list_inventory
     elsif cmd.include? 'look'
-      puts 'You are in a small round room with a passageways heading east and west.'
+      puts 'You are on a ledge with a passageway to the east. There are stairs leading down to flowing water. It is too high to jump.'
     elsif cmd.include? 'use'
       puts 'You can\'t use that here'
-    elsif cmd.include? 'west'
-      room7
+    elsif cmd.include? 'climb' or cmd.include? 'ladder' or cmd.include? 'down'
+      puts 'You climb down the ladder'
+      room9
     elsif cmd.include? 'east'
-      room8
+      room6
+    elsif cmd.include? 'jump' or cmd.include? 'down'
+      puts 'You jump down. You were too high above the ground to land safely.'
+      die
     else
       invalid_action
     end
@@ -510,11 +515,62 @@ end
 #room with boulder
 def room8
   #state 1 = new
-  #state 2 = axe not taken
-  #state 3 = axe taken
-  if @room6 == 1
-    puts 'you are in room 8'
-    @room6 = 2
+  #state 2 = boulder
+  #state 3 = boulder pushed
+  if @room8 == 1
+    puts 'You are standing on an open ledge, fairly high up from the ground beneath you. There is a huge boulder right on the edge.'
+    puts 'The ground below you to the north has an opening from the east with water rushing out at high speeds towards a doorway to the west.'
+    puts 'There is a passageway to the east.'
+    @room8 = 2
+  end
+
+  while true
+
+    cmd = take_input
+
+    if cmd.include? 'help'
+      help
+    elsif cmd.include? 'exit'
+      exit_game
+    elsif cmd.include? 'inventory'
+      list_inventory
+    elsif cmd.include? 'look'
+      puts 'You are on an open ledge, with a boulder and running water down below. The water is pouring out'
+      puts 'of an opening from the east towards a doorway on the west.'
+    elsif cmd.include? 'use'
+      puts 'You can\'t use that here'
+    elsif cmd.include? 'boulder' or cmd.include 'push'
+      if @room8 == 2
+        puts 'You give the boulder a heavy push. It rolls off the ledge to the ground below. It lands in the opening where the water'
+        puts 'is pouring out of, completely stopping the flow of water.'
+        @room8 = 3
+      elsif @room == 3
+        puts 'You already pushed the boulder. You see it in the ground below, blocking the east passageway.'
+    elsif cmd.include? 'west'
+      room6
+    elsif cmd.include? 'jump' or cmd.include? 'down'
+      puts 'You jump down. The ledge was too high up, and your body can\'t support the weight as you land.'
+      die
+    else
+      invalid_action
+    end
+  end
+end
+
+##########
+# ROOM 9 #
+##########
+#water room
+def room9
+  #state 1 = new
+  #state 2 = no boulder
+  #state 3 = boulder
+
+  if @room9 == 1
+	puts 'You are on a footing parallel to a stream of water running east and west. The water originates from an opening to the east'
+	puts 'and ends on the western wall. It is hitting what seems to be a door.'
+    puts 'The pressure of the water is so great, you don\'t think you could navigate through it to get to the door.'
+    @room9 = 2
   end
 
   while true
@@ -531,8 +587,8 @@ def room8
       puts 'You are in a small round room with a passageways heading east and west.'
     elsif cmd.include? 'use'
       puts 'You can\'t use that here'
-    elsif cmd.include? 'west'
-      room7
+    elsif cmd.include? 'climb' or cmd.include? 'ladder' or cmd.include? 'down'
+      room9
     elsif cmd.include? 'east'
       room8
     else
@@ -540,7 +596,6 @@ def room8
     end
   end
 end
-
 #####################
 # PRIMARY FUNCTIONS #
 #####################
