@@ -85,7 +85,9 @@ def room1
       help
     elsif cmd.include? 'exit'
       exit_game
-    elsif cmd.include? 'look'
+	elsif cmd.include? 'use'
+	  use_item
+	elsif cmd.include? 'look'
       if @room1 == 2
         puts 'There is a lever to the right, and a door to the north'
       elsif @room1 == 3
@@ -330,7 +332,7 @@ def room4
         puts 'You are in a small circular room full of dirt and debris. There is a passageway to the east.'
       end
     elsif cmd.include? 'use'
-      puts 'You can\'t use that here'
+      use_item
     elsif cmd.include? 'axe'
       if @room4_items.include? 'pickaxe'
         puts 'You take the pickaxe'
@@ -354,14 +356,15 @@ end
 #ROOM WITH CHEST WITH SWORD
 def room5
   #state 1 = new
-  #state 2 = chest closed
-  #state 3 = chest opened
-  #state 4 = sword taken
+  #state 2 = chest closed, locked
+  #state 3 = chest closed, unlocked
+  #state 4 = chest open, unlocked
+  #state 5 = sword taken
 
-  if @room3 == 1
+  if @room5 == 1
     puts 'You walk down the narrow passageway into a small alcove. The room is barely big enough for you to stand in.'
-    puts 'There is a treasure chest, simply decorated and made of wood.'
-    @room3 = 2
+    puts 'There is a treasure chest, a somewhat intricate designed etched into its wood panels. It emits a faint eerie glow.'
+    @room5 = 2
   else
     puts 'You are in the small room with a treasure chest'
   end
@@ -377,13 +380,45 @@ def room5
     elsif cmd.include? 'inventory'
       list_inventory
     elsif cmd.include? 'look'
-      if @room5 == 2
+      if @room5 == 2 or  @room5 == 3
         puts 'You are in a very small room, with a treasure chest.'
-      else
-        puts 'You are in a small room, the treasure chest has been opened'
+	  elsif @room5 == 4
+        puts 'You are in a very small room, with an opened treasure chest. There is a sword inside of it.'
+	  elsif @room5 == 5
+        puts 'You are in a very small room, with an opened empty treasure chest.'
       end
     elsif cmd.include? 'use'
-      puts 'You can\'t use that here'
+      use_item_cmd = cmd.split(' ')
+      has_item, item = use_item use_item_cmd[1]
+      if has_item
+        if item.eql? 'key'
+          if @room5 == 2
+            puts 'You insert the key into the keyhole and give it a quick turn.'
+		    puts 'The key audibly clicks into place and then snaps in half. Key has been removed from your inventory.'
+			@inventory.delete('key')
+		    @room5 = 3
+		  end
+        end
+      end
+	elsif cmd.include? 'open'
+	  if @room5 == 2
+	    puts 'You try to open the chest, but it seems to be locked.'
+	  elsif @room5 == 3
+	    puts 'You lift the lid of the chest, revealing a sword inside.'
+		@room5 = 4
+	  else
+	    puts 'The chest is already open'
+	  end	
+    elsif cmd.include? 'sword'
+      if @room5 == 4
+        puts 'You take the sword. The glow surrounding the treasure chest slowly fades away.'
+        @inventory.push('sword')
+        @room5 = 5
+      elsif @room5 == 5
+        puts 'You already took the sword'
+	  else
+	    invalid_action
+	  end
     elsif cmd.include? 'west'
       room3
     else
@@ -520,8 +555,19 @@ def exit_game
   end
 end
 
+def die
+  puts 'You died.'
+  puts 'Would you like to start again?'
+  cmd = take_input
+  if cmd.eql? 'y' or cmd.eql? 'yes'
+    start
+  else
+    exit_game
+  end
+end
+
 def invalid_action
-  puts 'You can\'t do that here'
+  puts 'You can\'t do that'
 end
 
 def list_inventory
