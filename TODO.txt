@@ -1,0 +1,1 @@
+Be allowed to use any item in any room, but if the item can't be used say " you can't use that here" or "That has no affect here". in rooms where no items can be used, just say "That has no affect here"
