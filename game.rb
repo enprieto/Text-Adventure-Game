@@ -43,7 +43,7 @@ def entrance
     elsif cmd.include? 'look'
       puts 'There is a cliff wall to the north, with the cave entrance in front of you and a sign next to it.'
     elsif cmd.include? 'read' or cmd.include? 'sign'
-      puts 'You walk up to the sign. It seems hastily put together, being help up with simple string.'
+      puts 'You walk up to the sign. It seems hastily put together, being help up with simple string. It reads:'
       puts 'Here\'s some useful information that will help you out in the cave.'
       help
     elsif cmd.include? 'north' or cmd.include? 'cave' or cmd.include? 'enter' or cmd.include? 'entrance'
@@ -257,7 +257,7 @@ def room3
         if item.include? 'axe'
           if @room3 == 2 or @room3 == 4
             puts 'You swing the pickaxe at the wall to the east. Chunks slowly start to chip away from it.'
-            puts 'You give it one final strike, and the entire wall comes crumbling down.'
+            puts 'You give it one final strike, and the entire wall comes crumbling down, revealing a passageway to the east.'
             puts 'The axe, being worn and rusty, falls apart. Pickaxe is removed from your inventory.'
             @inventory.delete('pickaxe')
             @room3 += 1
@@ -268,7 +268,7 @@ def room3
       if @room3_switch
         if @room3 == 2 or @room3 == 3
           puts 'You push the north door open.'
-
+          @room += 2
         else
           puts 'The door is already open'
         end
@@ -327,7 +327,7 @@ def room4
       if @room4 == 2
         puts 'You kick the debris around with your feet and reveal a pickaxe on the ground'
       else
-        puts 'You are in a small circular room full of dirt and debris.'
+        puts 'You are in a small circular room full of dirt and debris. There is a passageway to the east.'
       end
     elsif cmd.include? 'use'
       puts 'You can\'t use that here'
