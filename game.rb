@@ -546,6 +546,7 @@ def room8
         @room8 = 3
       elsif @room == 3
         puts 'You already pushed the boulder. You see it in the ground below, blocking the east passageway.'
+	  end
     elsif cmd.include? 'west'
       room6
     elsif cmd.include? 'jump' or cmd.include? 'down'
