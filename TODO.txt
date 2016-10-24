@@ -1,5 +1,7 @@
-Be allowed to use any item in any room, but if the item can't be used say " you can't use that here" or "That has no affect here". in rooms where no items can be used, just say "That has no affect here"
+Be allowed to use any item in any room, but if the item can't be used say "you can't use that here" or "That has no affect here". in rooms where no items can be used, just say "That has no affect here"
 
-have the chest emit an errie glow. glow disappears once you remove the sword.
+need a torch to see room4? torch needs to do something
 
-need a torch to see room4?
+
+add a simple dictionary. basically will check all possible keywords with an intention. ex. break, punch, hit, strike, kick, are all intentions to break the wall.
+all input cmds will be passed to this dictionary to check intention.

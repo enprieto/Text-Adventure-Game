@@ -34,8 +34,7 @@ def entrance
     if cmd.include? 'inventory'
       list_inventory
     elsif cmd.include? 'use'
-      use_string = cmd.split(' ')
-      use_item use_string[1]
+      use_item cmd
     elsif cmd.include? 'help'
       help
     elsif cmd.include? 'exit'
@@ -86,7 +85,7 @@ def room1
     elsif cmd.include? 'exit'
       exit_game
 	elsif cmd.include? 'use'
-	  use_item
+	  use_item cmd
 	elsif cmd.include? 'look'
       if @room1 == 2
         puts 'There is a lever to the right, and a door to the north'
@@ -139,7 +138,7 @@ def room2
 
   if @room2 == 1
     puts 'You are in a medium sized hallway going north and south. There is a lit torch hanging on the left wall lighting the hallway.'
-    puts 'There is an open door to the south and an open doorway to the north.'
+    puts 'There is an open door to the south and a door to the north.'
     @room2 = 2
   else
     puts 'You are in a hallway, with a door to the north and south and a torch hanging on the wall'
@@ -164,8 +163,7 @@ def room2
         puts 'You are in a hallway with a door to the north and south, and torches hanging from the wall.'
       end
     elsif cmd.include? 'use'
-      use_item_cmd = cmd.split(' ')
-      has_item, item = use_item use_item_cmd[1]
+      has_item, item = use_item cmd
       if has_item
         if item.eql? 'key'
          if @room2 == 3
@@ -232,18 +230,14 @@ def room3
     elsif cmd.include? 'inventory'
       list_inventory
     elsif cmd.include? 'look'
-      puts 'You are in a large room with a pedestal in the center, a door to the north and an opening to the east.'
+      puts 'You are in a large room with a pedestal in the center, a door to the north and an opening to the west.'
       if @room3 == 2
-        #puts 'You take a closer look at the pedestal and notice what seems like a switch.'
         puts 'You also notice a faint light coming from the wall on the east, as if the wall was full of cracks allowing light to seep through.'
       elsif @room3 == 3
-        #puts 'You notice a switch on the pedestal at the center of the room.'
-        puts 'The wall to the right has been destroyed, revealing a small room to the west'
+        puts 'The wall to the right has been destroyed, revealing a small room to the east'
       elsif @room3 == 4
-        #puts 'You notice a switch on the pedestal at the center of the room.'
         puts 'You also notice a faint light coming from the wall on the east, as if the wall was full of cracks allowing light to seep through.'
       elsif @room3 == 5
-        #puts 'You notice a switch on the pedestal at the center of the room.'
         puts 'The wall to the right has been destroyed, revealing a small room to the east'
       end
     elsif cmd.include? 'pedestal'
@@ -253,8 +247,7 @@ def room3
       puts 'You press the switch. You hear a clank come from the north'
       @room3_switch = !@room3_switch
     elsif cmd.include? 'use'
-      use_item_cmd = cmd.split(' ')
-      has_item, item = use_item use_item_cmd[1]
+      has_item, item = use_item cmd
       if has_item
         if item.include? 'axe'
           if @room3 == 2 or @room3 == 4
@@ -270,7 +263,7 @@ def room3
       if @room3_switch
         if @room3 == 2 or @room3 == 3
           puts 'You push the north door open.'
-          @room += 2
+          @room3 += 2
         else
           puts 'The door is already open'
         end
@@ -282,8 +275,14 @@ def room3
     elsif cmd.include? 'south'
       room2
     elsif cmd.include? 'wall' or cmd.include? 'light'
-      puts 'You walk up to the wall to the east and notice it looks very fragile. Rocks have chipped away from it,'
-      puts 'allowing a faint light to seep through it from the other side'
+      if cmd.include? 'punch' or cmd.include? 'hit' or cmd.include? 'strike' or cmd.include? 'kick' or cmd.include? 'break' or cmd.include? 'destroy'
+        puts 'You try to destroy the wall. Some rocks crumble away, but the wall remains standing.'
+      else
+        puts 'You walk up to the wall to the east and notice it looks very fragile. Rocks have chipped away from it,'
+        puts 'allowing a faint light to seep through it from the other side'
+      end
+    elsif cmd.include? 'rock'
+      puts 'You try to use the rocks to break the wall, but they are too small.'
     elsif cmd.include? 'east'
       if @room3 == 2 or @room3 == 4
         puts 'There is a wall to the east, but it looks like it can be broken down'
@@ -294,7 +293,7 @@ def room3
       if @room3 == 2 or @room3 == 3
         puts 'There is a door blocking the way to the north'
       else
-        puts 'go to room 6'
+        room6
       end
     else
       invalid_action
@@ -311,9 +310,10 @@ def room4
   #state 2 = axe not taken
   #state 3 = axe taken
   if @room4 == 1
-    puts 'You are in a small round room, with lots of rock and debris. There is an open doorway to the east'
     @room4 = 2
   end
+
+  puts 'You are in a small round room, with lots of rock and debris. There is an open doorway to the east'
 
   while true
 
@@ -326,13 +326,18 @@ def room4
     elsif cmd.include? 'inventory'
       list_inventory
     elsif cmd.include? 'look'
-      if @room4 == 2
-        puts 'You kick the debris around with your feet and reveal a pickaxe on the ground'
+      puts 'You are in a small circular room full of dirt and debris. There is a passageway to the east.'
+      if @room4_items.include? 'pickaxe'
+         puts 'You see something shiny among the debris.'
+      end 
+    elsif cmd.include? 'rock' or cmd.include? 'debris'
+      if @room4_items.include? 'pickaxe'
+        puts 'You kick the debris around with your feet and reveal a pickaxe on the ground.'
       else
-        puts 'You are in a small circular room full of dirt and debris. There is a passageway to the east.'
+        puts 'You kick around the debris but can\'t find anything else.'
       end
     elsif cmd.include? 'use'
-      use_item
+      puts 'You can\'t use that here.'
     elsif cmd.include? 'axe'
       if @room4_items.include? 'pickaxe'
         puts 'You take the pickaxe'
@@ -388,8 +393,7 @@ def room5
         puts 'You are in a very small room, with an opened empty treasure chest.'
       end
     elsif cmd.include? 'use'
-      use_item_cmd = cmd.split(' ')
-      has_item, item = use_item use_item_cmd[1]
+      has_item, item = use_item cmd
       if has_item
         if item.eql? 'key'
           if @room5 == 2
@@ -400,15 +404,15 @@ def room5
 		  end
         end
       end
-	elsif cmd.include? 'open'
-	  if @room5 == 2
-	    puts 'You try to open the chest, but it seems to be locked.'
-	  elsif @room5 == 3
-	    puts 'You lift the lid of the chest, revealing a sword inside.'
-		@room5 = 4
-	  else
-	    puts 'The chest is already open'
-	  end	
+	  elsif cmd.include? 'open' or cmd.include? 'chest' or cmd.include 'unlock'
+	    if @room5 == 2
+	      puts 'You try to open the chest, but it seems to be locked.'
+	    elsif @room5 == 3
+	      puts 'You lift the lid of the chest, revealing a sword inside.'
+		    @room5 = 4
+	    else
+	      puts 'The chest is already open'
+	    end	
     elsif cmd.include? 'sword'
       if @room5 == 4
         puts 'You take the sword. The glow surrounding the treasure chest slowly fades away.'
@@ -416,9 +420,9 @@ def room5
         @room5 = 5
       elsif @room5 == 5
         puts 'You already took the sword'
-	  else
-	    invalid_action
-	  end
+	    else
+	      invalid_action
+	    end
     elsif cmd.include? 'west'
       room3
     else
@@ -436,8 +440,9 @@ def room6
   #state 1 = new
   #state 2 = visited
 
+  puts 'You are in a small round room with passageways heading east and west.'
+  
   if @room6 == 1
-    puts 'You are in a small round room with passageways heading east and west.'
     @room6 = 2
   end
 
@@ -539,7 +544,7 @@ def room8
       puts 'of an opening from the east towards a doorway on the west.'
     elsif cmd.include? 'use'
       puts 'You can\'t use that here'
-    elsif cmd.include? 'boulder' or cmd.include 'push'
+    elsif cmd.include? 'boulder' or cmd.include? 'push'
       if @room8 == 2
         puts 'You give the boulder a heavy push. It rolls off the ledge to the ground below. It lands in the opening where the water'
         puts 'is pouring out of, completely stopping the flow of water.'
@@ -634,7 +639,9 @@ def list_inventory
   end
 end
 
-def use_item(requested_item)
+def use_item(use_cmd)
+  use_string = use_cmd.split(' ')
+  requested_item = use_string[1] 
   has_item = false
   if requested_item.nil? or requested_item.empty?
     requested_item = String.new
@@ -653,8 +660,10 @@ def use_item(requested_item)
 end
 
 def take_input
-  print '> '
+  puts ''
+  print '>>> '
   cmd = gets
+  puts ''
   cmd.downcase
 end
 
