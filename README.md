@@ -8,11 +8,15 @@ I don't want to make this game too sophisticated. That being said, I do have pla
 
 # Dev notes /  Architecture
 
-Each room has a state. during each state, there is only 1 command that can be successfully executed to proceed to the next state.
-Every room begins in state 1, being unvisited. After that, each rome moves to state 2, a visited state., and progresses in states based on actions taken by the player.
+Each room has a state. during each state, only one command at a time can be successfully executed to proceed to the next state.
+Every room begins in state 1, being unvisited. After that, each rome moves to state 2, a visited state, and progresses in states based on actions taken by the player.
 
 # Releases
 
 ## Part 1
 
 Part 1 is currently in development.
+
+## python version
+
+Python version of the game so far is now available
