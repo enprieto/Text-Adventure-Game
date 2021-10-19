@@ -1,7 +1,7 @@
 # require './room'
 
 inventory = []
-room0_state, room1_state, room2_state, room3_state, room4_state, room5_state, room6_state, room7_state, room8_state = 1, 1, 1, 1, 1, 1, 1, 1, 1
+room0_state, room1_state, room2_state, room3_state, room4_state, room5_state, room6_state, room7_state, room8_state, room9_state = 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 room2_items = ['torch', 'key']
 room3_switch = 0
 room4_items = ['pickaxe']
@@ -85,7 +85,7 @@ def start():
 # ENTRANCE #
 ############
 def entrance():
-    # print('\nEXTERIOR\n')
+    print('\nEXTERIOR\n')
     # state 1 = new
     # state 2 = visited
 
@@ -126,6 +126,7 @@ def entrance():
 # ROOM 1 #
 ##########
 def room1():
+    print('\nROOM 1 - CAVE ENTRANCE\n')
     # state 1 = new
     # state 2 = visited, door locked and lever in locked position
     # state 3 = door unlocked, lever in unlocked position
@@ -134,8 +135,6 @@ def room1():
     # Player is expected to pull the lever before proceeding north.
 
     global room1_state
-
-    #print('\nCAVE ENTRANCE\n')
 
     if room1_state == 1:
         print('You walk into the cave. It appears no one has been here for a long time. Cobwebs line the ceiling. Random bits of bone are scattered across the floor.')
@@ -185,9 +184,8 @@ def room1():
 ##########
 # ROOM 2 #
 ##########
-#HALLWAY
-
 def room2():
+    print('\nROOM 2 - HALLWAY\n')
     #state 1 = new
     #state 2 = door closed, key on ground
     #state 3 = door closed, no key
@@ -199,7 +197,7 @@ def room2():
 
     if room2_state == 1:
         print('You are in a medium sized hallway going north and south. There is a lit torch hanging on the left wall lighting the hallway.')
-        print('There is an open door to the south and a door to the north.')
+        print('There are doors going north and south.')
         room2_state = 2
     else:
         print('You are in a hallway, with a door to the north and south and a torch hanging on the wall')
@@ -237,9 +235,8 @@ def room2():
 ##########
 # ROOM 3 #
 ##########
-#CIRCULAR ROOM WITH PEDESTAL
-
 def room3():
+    print('\nROOM 3 - CIRCULAR ROOM WITH PEDESTAL\n')
     #state 1 = new
     #state 2 = door closed, wall up
     #state 3 = door closed, wall down
@@ -279,19 +276,16 @@ def room3():
                 room3_switch = 1
             elif room3_switch == 1:
                 room3_switch = 0
-        elif cmd in 'use':
-            if cmd in 'pickaxe':
-                if 'pickaxe' in inventory and (room3_state == 2 or room3_state == 4):
-                    print('You swing the pickaxe at the wall to the east. Chunks slowly start to chip away from it.')
-                    print('You give it one final strike, and the entire wall comes crumbling down, revealing a passageway to the east.')
-                    print('The axe, being worn and rusty, falls apart. Pickaxe is removed from your inventory.')
-                    inventory.remove('pickaxe')
-                    room3_state = room2_state + 1
-                else:
-                    print('You don\'t have that.')
+        elif cmd in 'pickaxe':
+            if 'pickaxe' in inventory and (room3_state == 2 or room3_state == 4):
+                print('You swing the pickaxe at the wall to the east. Chunks slowly start to chip away from it.')
+                print('You give it one final strike, and the entire wall comes crumbling down, revealing a passageway to the east.')
+                print('The axe, being worn and rusty, falls apart. It didn\'t look too sturdy to begin with.')
+                print('Pickaxe is removed from your inventory.')
+                inventory.remove('pickaxe')
+                room3_state = room3_state + 1
             else:
-                print('You can\'t use that here.')
-
+                print('You don\'t have that.')
         elif cmd in 'door' or cmd in 'north':
             if room3_switch == 0:
                 if room3_state == 2 or room3_state == 3:
@@ -299,30 +293,23 @@ def room3():
             elif room3_switch == 1:
                 if room3_state == 2 or room3_state == 3:
                     print('You push the north door open and walk through.')
-                    #room6()
-                    print("go to room 6")
+                    room6()
                 elif room3_state == 2 or room3_state == 3:
-                    # room6()
-                    print("go to room 6")
+                    room6()
         elif cmd in 'west':
             room4()
-            print('go to room 4')
         elif cmd in 'south':
             room2()
-        elif cmd in 'wall' or cmd in 'light':
-            if cmd in 'punch' or cmd in 'hit' or cmd in 'strike' or cmd in 'kick' or cmd in 'break' or cmd in 'destroy':
-                print('You try to destroy the wall. Some rocks crumble away, but the wall remains standing.')
+        elif cmd in 'wall' or cmd in 'light' or cmd in 'east':
+            if room3_state == 2 or room3_state == 4:
+                    print('You walk up to the wall to the east and notice it looks very fragile. Rocks have chipped away from it,')
+                    print('allowing a faint light to seep through it from the other side')
             else:
-                print('You walk up to the wall to the east and notice it looks very fragile. Rocks have chipped away from it,')
-                print('allowing a faint light to seep through it from the other side')
+                room5()
+        if cmd in 'punch' or cmd in 'hit' or cmd in 'strike' or cmd in 'kick' or cmd in 'break' or cmd in 'destroy':
+            print('You try to destroy the wall. Some rocks crumble away, but the wall remains standing.')
         elif cmd in 'rock':
             print('You try to use the rocks to break the wall, but they are too small.')
-        elif cmd in 'east':
-            if room3 == 2 or room3 == 4:
-                print('There is a wall to the east, but it looks like it can be broken down')
-            else:
-                #room5()
-                print('go to room 5')
         else:
             process_input(cmd)
 
@@ -330,8 +317,8 @@ def room3():
 ##########
 # ROOM 4 #
 ##########
-#ROOM WITH AXE
 def room4():
+    print('\nROOM 4 - ROOM WITH AXE\n')
     #state 1 = new
     #state 2 = axe not taken
     #state 3 = axe taken
@@ -359,7 +346,7 @@ def room4():
                 print('You kick the debris around with your feet and reveal a pickaxe on the ground.')
             else:
                 print('You kick around the debris but can\'t find anything else.')
-        #elsif cmd.include? 'use'
+        #elif cmd in  'use'
         #print('You can\'t use that here.'
         elif cmd in 'pickaxe':
             if 'pickaxe' in room4_items:
@@ -371,6 +358,212 @@ def room4():
                 print('You already took the pickaxe')
         elif cmd in 'east':
             room3()
+        else:
+            process_input(cmd)
+
+##########
+# ROOM 5 #
+##########
+def room5():
+    print('\nROOM 5 - ROOM WITH CHEST AND SWORD\n')
+    #state 1 = new
+    #state 2 = chest closed, locked
+    #state 3 = chest closed, unlocked
+    #state 4 = chest open, unlocked
+    #state 5 = sword taken
+
+    global room5_state
+
+    if room5_state == 1:
+        print('You walk down the narrow passageway into a small alcove. The room is barely big enough for you to stand in.')
+        print('There is a treasure chest, a somewhat intricate designed etched into its wood panels. It emits a faint eerie glow.')
+        room5_state = 2
+    else:
+        print('You are in the small room with a treasure chest')
+
+    while True:
+
+        cmd = input('>>>').lower()
+
+        if cmd in 'look':
+            if room5_state == 2 or room5_state == 3:
+                print( 'You are in a very small room, with a treasure chest.')
+            elif room5_state == 4:
+                print( 'You are in a very small room, with an opened treasure chest. There is a sword inside of it.')
+            elif room5_state == 5:
+                print('You are in a very small room, with an opened empty treasure chest.')
+        elif cmd in 'key':
+            if 'key' in inventory:
+                if room5_state == 2:
+                    print('You insert the key into the keyhole and give it a quick turn.')
+                    print('The key audibly clicks into place and then snaps in half. Key has been removed from your inventory.')
+                    inventory.remove('key')
+                    room5_state = 3
+        elif cmd in 'open' or cmd in 'chest' or cmd in 'unlock':
+            if room5_state == 2:
+                print('You try to open the chest, but it seems to be locked.')
+            elif room5_state == 3:
+                print('You lift the lid of the chest, revealing a sword inside.')
+                room5_state = 4
+            else:
+                print('The chest is already open')
+        elif cmd in 'sword':
+            if room5_state == 4:
+                print('You take the sword. The glow surrounding the treasure chest slowly fades away.')
+                inventory.append('sword')
+                room5_state = 5
+            elif room5_state == 5:
+                print('You already took the sword')
+            else:
+                invalid_action()
+        elif cmd in 'west':
+            room3()
+        else:
+            process_input(cmd)
+
+
+##########
+# ROOM 6 #
+##########
+def room6():
+    print('\nROOM 6 - ROOM LEADING TO BOULDER AND LADDER\n')
+    # state 1 = new
+    # state 2 = visited
+
+    global room6_state
+
+    print('You are in a small intersection with passageways heading south, east, and west.')
+
+    if room6_state == 1:
+        room6_state = 2
+
+    while True:
+
+        cmd = input(">>>").lower()
+
+        if cmd in 'look':
+            print('You are in a small round room with passageways heading east and west.')
+        elif cmd in 'use':
+            print('You can\'t use that here')
+        elif cmd in 'west':
+            room7()
+        elif cmd in 'east':
+            room8()
+        elif cmd in 'south':
+            room3()
+        else:
+            process_input(cmd)
+
+
+##########
+# ROOM 7 #
+##########
+def room7():
+    print('\nROOM 7 - ROOM WITH LADDER\n')
+    #state 1 = new
+    #state 2 = axe not taken
+    #state 3 = axe taken
+
+    global room7_state
+
+    if room7_state == 1:
+        print('You are standing on an open ledge, fairly high up from the ground beneath you. To the north, there is a ladder going down.')
+        print('You can clearly hear water running below you at the bottom of the ladder.')
+        print('There is a passageway to the east.')
+        room7_state = 2
+
+    while True:
+
+        cmd = input('>>>').lower()
+
+        if cmd in 'look':
+            print('You are on a ledge with a passageway to the east. There are stairs leading straight down to flowing water. It seems to high to jump.')
+        elif cmd in 'use':
+            print('You can\'t use that here')
+        elif cmd in 'climb' or cmd in 'ladder' or cmd in 'down':
+            print('You climb down the ladder')
+            room9()
+        elif cmd in 'east':
+            room6()
+        elif cmd in 'jump' or cmd in 'down':
+            print('You jump down. You were too high above the ground to land safely.')
+            die()
+        else:
+            process_input(cmd)
+
+
+##########
+# ROOM 8 #
+##########
+def room8():
+    print('\nROOM 8 - ROOM WITH BOULDER\n')
+    #state 1 = new
+    #state 2 = boulder
+    #state 3 = boulder pushed
+
+    global room8_state
+
+    if room8_state == 1:
+        print( 'You are standing on an open ledge, fairly high up from the ground beneath you. There is a huge boulder right on the edge.')
+        print( 'The ground below you to the north has an opening from the east with water rushing out at high speeds towards a doorway to the west.')
+        print( 'There is a passageway to the east.')
+        room8_state = 2
+
+    while True:
+
+        cmd = input('>>>').lower()
+
+        if cmd in 'look':
+            print('You are on an open ledge, with a boulder and running water down below. The water is pouring out')
+            print('of an opening from the east towards a doorway on the west.')
+        elif cmd in 'use':
+            print('You can\'t use that here')
+        elif cmd in 'boulder' or cmd in 'push':
+            if room8_state == 2:
+                print('You give the boulder a heavy push. It rolls off the ledge to the ground below. It lands in the opening where the water')
+                print('is pouring out of, completely stopping the flow of water.')
+                room8_state = 3
+            elif room8_state == 3:
+                print('You already pushed the boulder. You see it in the ground below, blocking the east passageway.')
+        elif cmd in 'west':
+            room6()
+        elif cmd in 'jump' or cmd in 'down':
+            print('You jump down. The ledge was too high up, and your body can\'t support the weight as you land.')
+            die()
+        else:
+            process_input(cmd)
+
+
+##########
+# ROOM 9 #
+##########
+def room9():
+    print('\nROOM 9 - WATER ROOM\n')
+    #state 1 = new
+    #state 2 = no boulder
+    #state 3 = boulder
+
+    global room9_state
+
+    if room9_state == 1:
+        print( 'You are on a footing parallel to a stream of water running east and west. The water originates from an opening to the east')
+        print( 'and ends on the western wall. It is hitting what seems to be a door.')
+        print( 'The pressure of the water is so great, you don\'t think you could navigate through it to get to the door.')
+        room9_state = 2
+
+    while True:
+
+        cmd = input('>>>').lower()
+
+        if cmd in 'look':
+            print( 'You are in a small round room with a passageways heading east and west.')
+        elif cmd in 'use':
+            print( 'You can\'t use that here')
+        elif cmd in 'climb' or cmd in 'ladder' or cmd in 'down':
+            #room10()
+            print("go to room 10")
+        elif cmd in 'east':
+            room8()
         else:
             process_input(cmd)
 
