@@ -9,12 +9,12 @@ room4_items = ['pickaxe']
 # PRIMARY FUNCTIONS #
 #####################
 def process_input(cmd):
-    if cmd in 'inventory' or cmd in 'items':
+    if any(x in cmd for x in ['inventory', 'items']):
         get_inventory()
     elif cmd in 'use':
         # use_item
         print("nothing to use")
-    elif cmd in 'help' or cmd in 'instructions' or cmd in 'guide':
+    elif any(x in cmd for x in ['help', 'instructions', 'guide']):
         instructions()
     elif cmd in 'exit':
         exit_game()
